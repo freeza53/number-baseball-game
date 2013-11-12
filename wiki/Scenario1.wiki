@@ -3,6 +3,7 @@
 = Introduction =
 
 1) 정수 0~9 중에서 임의의 숫자 3개를 뽑는다
+
 2) 
 
 = Details =
