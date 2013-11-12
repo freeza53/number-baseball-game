@@ -17,3 +17,7 @@ Add your content here.  Format your content with:
    이때 숫자와 위치가 정확히 일치하면 Strike, 숫자는 같으나 위치가 다르면 Ball, 둘다 틀리면 Out 에 카운팅 된다.
 
 3)세자리 숫자와 자리가 모두 맞거나 3Out이 되면 게임은 끝난다.
+
+
+
+- 실행 수 표시
