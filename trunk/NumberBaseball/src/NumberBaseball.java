@@ -9,7 +9,7 @@ public class NumberBaseball {
 		// TODO Auto-generated method stub
 		
 		logger.debug("Hello");
-		logger.error("AAAAAAAAA");
+		logger.error("world!");
 	}
 
 }
