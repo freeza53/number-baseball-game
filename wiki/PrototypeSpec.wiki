@@ -1,6 +1,3 @@
-#summary One-sentence summary of this page.
-
-= Introduction =
 
 프로토타입의 구현과 관련되어 정해진 기술적인 사항들을 정리해 봅시다. 
 
