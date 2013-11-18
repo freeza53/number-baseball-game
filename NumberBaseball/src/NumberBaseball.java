@@ -48,13 +48,17 @@ public class NumberBaseball {
 
 	private static int[] getNumbersFromUser() {
 		final int[] result = new int[3];
-		final Scanner a = new Scanner(System.in);
 		int aNumber = 0;
-		do {
-			System.out.println("숫자를 입력하세요.");
-			aNumber = a.nextInt();
-		} while (aNumber < 99 || aNumber > 999);
-
+		Scanner a = null;
+		try {
+			a = new Scanner(System.in);
+			do {
+				System.out.println("숫자를 입력하세요.");
+				aNumber = a.nextInt();
+			} while (aNumber < 99 || aNumber > 999);
+		} finally {
+			a.close();
+		}
 		for (int i = result.length - 1; i >= 0; i--) {
 			result[i] = aNumber % 10;
 			aNumber = aNumber / 10;
