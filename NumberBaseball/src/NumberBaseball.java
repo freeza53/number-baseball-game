@@ -9,14 +9,12 @@ public class NumberBaseball {
 	private static final Logger logger = Logger.getLogger(NumberBaseball.class);
 
 	public static void main(String[] args) {
-		int[] a = getNumbersFromUser();
-		System.out.println(a[0] + "-" + a[1] + "-" + a[2]);
 		// TODO Auto-generated method stub
 
 		logger.debug("숫자 야구 게임 시작!");
 
 		int[] showNum = new int[3]; // 컴퓨터에서 뽑은 정수 3개
-		int[] inputNum = new int[3]; // 플레이어가 뽑은 정수 3개
+		int[] inputNum = new int[3]; // 플레이어가 입력한 정수 3개
 
 		// 정수 3 만들기
 		Random rNum = new Random();
@@ -34,16 +32,33 @@ public class NumberBaseball {
 		} else if (showNum[1] == showNum[2]) {
 			showNum[2] = rNum.nextInt(10);
 		}
+		System.out.println("맞출 숫자: " + showNum[0] + "-" + showNum[1]  + "-" + showNum[2]);
+		
 
-		logger.debug("숫자 3개를 선택하세요!");
-
-		for (int i = 0; i < inputNum.length; i++) {
-			inputNum[i] = rNum.nextInt(10);
+		// 플레이어 숫자 입력
+		int[] a = getNumbersFromUser();
+		System.out.println(a[0] + "-" + a[1] + "-" + a[2]);
+		
+		//숫자 비교
+		int sChk = 0;
+		int bChk = 0;
+		
+		for(int i=0;i<showNum.length;i++){
+			for(int j=0;j<a.length;j++){
+				if(showNum[i] == a[j] && i == j){
+					//System.out.println("Strike!!!");
+					sChk = sChk + 1;
+				}else if(showNum[i] == a[j] && i != j){
+					//System.out.println("Ball!!!");
+					bChk = bChk + 1;
+				}else{
+					//System.out.println("Out!!!");
+				}
+			}
 		}
-
-		// 중복체크 해야함!!
-
-		logger.debug("입력한 수 : " + Arrays.toString(inputNum));
+		System.out.println("==== Result ===========================");
+		System.out.println("스트라이크: " + sChk + " 볼: "+ bChk + " 아웃: " + (3-sChk-bChk));
+		
 	}
 
 	private static int[] getNumbersFromUser() {
@@ -55,7 +70,7 @@ public class NumberBaseball {
 			do {
 				System.out.println("숫자를 입력하세요.");
 				aNumber = a.nextInt();
-			} while (aNumber < 99 || aNumber > 999);
+			} while (aNumber < 12 || aNumber > 999);
 		} finally {
 			a.close();
 		}
