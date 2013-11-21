@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -11,89 +10,125 @@ public class NumberBaseball {
 	private static final Logger logger = Logger.getLogger(NumberBaseball.class);
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 		logger.debug("숫자 야구 게임 시작!");
-
 		final List<Integer> showNum = generateNumber(3, 10);
-
-		// 정수 3 만들기
-		System.out.println("맞출 숫자: " + showNum);
-
-		// 숫자 비교
-
-		int inning = playResult(showNum);
-
+		int inning = gamePlay(showNum, 12);
+		logger.info("win!! at " + inning + " innings");
+		logger.info("game finished.");
+		
 	}
 
+	/**
+	 * 맞출 숫자 생성.
+	 */
 	private static List<Integer> generateNumber(int count, int range) {
 		final List<Integer> result = new ArrayList<Integer>(count);
 		final Random rNum = new Random();
 		for (int i = 0; i < count; i++) {
-			setANumber(result, rNum, range);
+			result.add(getAnUniqueRandomNumber(result, rNum, range));
 		}
 
 		return result;
 	}
 
-	private static void setANumber(List<Integer> result, Random rNum, int LIMIT) {
-		int aNum = 0;
+	/**
+	 * 중복되지 않는 숫자를 랜덤하게 생성.
+	 */
+	private static int getAnUniqueRandomNumber(List<Integer> showNum,
+			Random rNum, int LIMIT) {
+		int result = 0;
 		do {
-			aNum = rNum.nextInt(LIMIT);
-		} while (result.contains(aNum));
-		result.add(aNum);
+			result = rNum.nextInt(LIMIT);
+		} while (showNum.contains(result));
+		return result;
 	}
 
-	/*
-	 * 사용자가 한번 입력해서 결과를 출력하는 것 까지의 처리.
+	/**
+	 * 게임 플레이
 	 */
-	private static int playResult(List<Integer> showNum) {
-
-		// 플레이어 숫자 입력
-
+	private static int gamePlay(List<Integer> showNum, int limitInning) {
 		int inning = 1;
-		for (int n = 0; n < 10; n++, inning++) {
-			int sChk = 0;
-			int bChk = 0;
-			List<Integer> aNumber = getNumbersFromUser(); // 플레이어가 입력한 정수 3개
-			System.out.println(aNumber);
-			for (int i = 0; i < showNum.size(); i++) {
-				for (int j = 0; j < aNumber.size(); j++) {
-					if (showNum.get(i) == aNumber.get(j) && i == j) {
-						// System.out.println("Strike!!!");
-						sChk = sChk + 1;
-					} else if (showNum.get(i) == aNumber.get(j) && i != j) {
-						// System.out.println("Ball!!!");
-						bChk = bChk + 1;
-					} else {
-						// System.out.println("Out!!!");
-					}
-				}
-			}
-			System.out.println("==== " + inning
-					+ "회 결과! ===========================");
-			System.out.println("스트라이크: " + sChk + " 볼: " + bChk + " 아웃: "
-					+ (3 - sChk - bChk));
-			if (sChk >= 3) {
+
+		for (; inning <= limitInning; inning++) {
+			boolean isFinish = playInning(showNum, inning);
+			if (isFinish) {
 				break;
 			}
-
 		}
 		return inning;
 	}
 
+	/**
+	 * 이닝에서의 처리 사용자에게 값을 받아서 볼 카운트를 연산함. 볼 카운트를 출력 정답을 맞추면 종료
+	 */
+	private static final boolean playInning(List<Integer> showNum, int inning) {
+		boolean result = false;
+		int sChk = 0;
+		int bChk = 0;
+		List<Integer> userInputtedNumber = getNumbersFromUser(); // 플레이어가 입력한 정수
+																	// 3개
+		for (int i = 0; i < userInputtedNumber.size(); i++) {
+			int aNumber = userInputtedNumber.get(i);
+			sChk = (isStrike(aNumber, i, showNum)) ? ++sChk : sChk;
+			bChk = (isBall(aNumber, i, showNum)) ? ++bChk : bChk;
+		}
+		result = sChk >= 3;
+		logger.info("[" + inning + "회] :: 스트라이크: " + sChk + ",  볼: "
+				+ bChk + "===================");
+		return result;
+	}
+
+	/**
+	 * 볼 여부 판단
+	 */
+	final static boolean isBall(int aNumber, int index, List<Integer> showNum) {
+		boolean result = false;
+		if (showNum == null) {
+			return result;
+		}
+		if (showNum.size() == 0) {
+			return result;
+		}
+
+		if (showNum.contains(aNumber)) {
+			if (aNumber != showNum.get(index)) {
+				result = true;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 스트라이크 여부 판단
+	 */
+	final static boolean isStrike(int aNumber, int index, List<Integer> showNum) {
+		boolean result = false;
+		if (showNum == null) {
+			return result;
+		}
+		if (showNum.size() == 0) {
+			return result;
+		}
+		result = aNumber == showNum.get(index);
+		return result;
+	}
+
 	final static Scanner a = new Scanner(System.in);
 
+	/**
+	 * 사용자에게서 숫자를 받는 처리.
+	 */
 	private static List<Integer> getNumbersFromUser() {
 		final List<Integer> result = new ArrayList<Integer>(3);
 		int aNumber = 0;
 		do {
-			System.out.println("숫자를 입력하세요.");
+			logger.info("숫자를 입력하세요.");
 			aNumber = a.nextInt();
 		} while (aNumber < 12 || aNumber > 999);
 
 		for (int i = 0; i < 3; i++) {
-			result.add(0,aNumber % 10);
+			result.add(0, aNumber % 10);
 			aNumber = aNumber / 10;
 		}
 		return result;
